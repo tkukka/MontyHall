@@ -40,7 +40,7 @@ wins_stick = 0
 wins_switch = 0
 for i in range(N):
 
-    if divmod(i, thresh)[1] == 0:
+    if i % thresh == 0:
         print('.', end='')
     
     shuffle(prizes)
