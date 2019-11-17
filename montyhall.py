@@ -8,57 +8,76 @@ GOAT = 0
 CAR = 1
 TEXT = ['goat', 'car']
 N = 100000
-prizes = [GOAT, GOAT, CAR]
-doors = [0, 1, 2]
+PRIZES = [GOAT, GOAT, CAR]
+DOORS = [0, 1, 2]
 
-
+# ----------------------------------------------------------------------
 # Monty must pick any door that hides a goat
-def monty_pick():
-    s = set(doors)
-    s2 = s - {pick}
+def monty_pick(player_pick):
+    s = set(DOORS)
+    s2 = s - {player_pick}
 
-    if prizes[pick] == CAR:
+    if PRIZES[player_pick] == CAR:
        #print(choice(list(s2)))
        return choice(list(s2))
    
     # Goat picked. Monty picks the other goat
     d = list(s2)
     
-    if prizes[d[0]] == CAR:
+    if PRIZES[d[0]] == CAR:
         return d[1]
     
     return d[0]
-
-def door_switch():
-    s = set(doors) - {pick, mpick}
+# ----------------------------------------------------------------------
+def door_switch(player_pick, monty_pick):
+    s = set(DOORS) - {player_pick, monty_pick}
     #print(int(s.pop()))
     return int(s.pop())
-
-print('Monty Hall problem. Iterations:', N)
-thresh = int(N/10)
-wins_stick = 0
-wins_switch = 0
-for i in range(N):
-
-    if i % thresh == 0:
-        print('.', end='')
+# ----------------------------------------------------------------------
+def main():
+    print('Monty Hall problem. Iterations:', N)
+    thresh = int(N / 10)
+    wins_stick = 0
+    wins_switch = 0
     
-    shuffle(prizes)
-    pick = choice(doors)
-    #print('Person picks a door #', pick, '. The prize not shown is a', TEXT[prizes[pick]])
+    for i in range(N):
     
-    mpick = monty_pick()
-    #print('Monty reveals a door #', mpick, '. The prize is a', TEXT[prizes[mpick]])
-    
-    # alternative choice
-    pick2 = door_switch()
-
-    if prizes[pick] == CAR:
-        wins_stick += 1
+        if i % thresh == 0:
+            print('.', end = '')
         
-    if prizes[pick2] == CAR:
-        wins_switch += 1
+        shuffle(PRIZES)
+        # Player's first choice
+        pick = choice(DOORS)
+#        print('Person picks a door #', pick, '. The prize, not shown, is a', 
+#              TEXT[PRIZES[pick]])
+        
+        mpick = monty_pick(pick)
+#        print('Monty reveals a door #', mpick, '. The prize is a', 
+#              TEXT[PRIZES[mpick]])
+        
+        # Player's alternative choice
+        pick2 = door_switch(pick, mpick)
+    
+        if PRIZES[pick] == CAR:
+            wins_stick += 1
+            
+        if PRIZES[pick2] == CAR:
+            wins_switch += 1
+           
+    print()
+#    print('Wins by sticking with the door:', wins_stick, '(', 100 * wins_stick
+#                                                           / N, '%)')
+#    
+#    print('Wins by changing your mind:', wins_switch, '(', 100 * wins_switch /
+#                                                        N, '%)') 
        
-print()
-print('Wins by sticking with the door:', wins_stick, '(', 100*wins_stick/N, '%)')
-print('Wins by changing your mind:', wins_switch, '(', 100*wins_switch/N, '%)')        
+    print(f'Wins by sticking with the door: {wins_stick} '
+                  f'({ 100 * wins_stick / N:.{3}}%)')
+    
+    print(f'Wins by changing your mind: {wins_switch} '
+                  f'({ 100 * wins_switch / N:.{3}}%)')        
+# ----------------------------------------------------------------------
+if __name__ == "__main__":
+    main()
+
+
